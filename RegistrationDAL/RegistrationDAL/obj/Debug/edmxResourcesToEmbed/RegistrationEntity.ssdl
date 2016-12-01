@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RegistrationDB.Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="courseID" />
+    </Key>
+    <Property Name="courseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="courseName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="courseDept" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="courseCapacity" Type="int" Nullable="false" />
+    <Property Name="courseProfessor" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="startTime" Type="time" Precision="7" Nullable="false" />
+    <Property Name="endTime" Type="time" Precision="7" Nullable="false" />
+    <Property Name="currentEnrollment" Type="int" />
+    <Property Name="courseCredits" Type="int" Nullable="false" />
+    <Property Name="active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="studentID" />
+    </Key>
+    <Property Name="studentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="firstName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="middleName" Type="nvarchar" MaxLength="255" />
+    <Property Name="lastName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="major" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StudentCourseList">
+    <Key>
+      <PropertyRef Name="StudentCourseID" />
+    </Key>
+    <Property Name="StudentCourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="studentID" Type="int" Nullable="false" />
+    <Property Name="courseID" Type="int" Nullable="false" />
+    <Property Name="active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_StudentCourseList_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1" />
+    <End Role="StudentCourseList" Type="Self.StudentCourseList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="courseID" />
+      </Principal>
+      <Dependent Role="StudentCourseList">
+        <PropertyRef Name="courseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentCourseList_Student">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="StudentCourseList" Type="Self.StudentCourseList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="studentID" />
+      </Principal>
+      <Dependent Role="StudentCourseList">
+        <PropertyRef Name="studentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_class_schedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="classnum" Type="int" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="courseid" Type="int" Nullable="false" />
+          <Property Name="coursename" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="767" Nullable="false" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="fn_student_schedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="studentnum" Type="int" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="name" Type="nvarchar" MaxLength="767" Nullable="false" />
+          <Property Name="courseid" Type="int" Nullable="false" />
+          <Property Name="coursename" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="starttime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="endtime" Type="time" Precision="7" Nullable="false" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="sp_add_course" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="coursename" Type="nvarchar" Mode="In" />
+    <Parameter Name="coursedept" Type="nvarchar" Mode="In" />
+    <Parameter Name="coursecapacity" Type="int" Mode="In" />
+    <Parameter Name="courseprof" Type="nvarchar" Mode="In" />
+    <Parameter Name="start" Type="time" Mode="In" />
+    <Parameter Name="end" Type="time" Mode="In" />
+    <Parameter Name="coursecredits" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_add_student" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="fname" Type="nvarchar" Mode="In" />
+    <Parameter Name="mname" Type="nvarchar" Mode="In" />
+    <Parameter Name="lname" Type="nvarchar" Mode="In" />
+    <Parameter Name="major" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="RegistrationDBModelStoreContainer">
+    <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StudentCourseList" EntityType="Self.StudentCourseList" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_StudentCourseList_Course" Association="Self.FK_StudentCourseList_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="StudentCourseList" EntitySet="StudentCourseList" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentCourseList_Student" Association="Self.FK_StudentCourseList_Student">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="StudentCourseList" EntitySet="StudentCourseList" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

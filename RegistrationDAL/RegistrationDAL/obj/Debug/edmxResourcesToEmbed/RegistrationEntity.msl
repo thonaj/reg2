@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="RegistrationDBModelStoreContainer" CdmEntityContainer="RegistrationDBEntities">
+    <EntitySetMapping Name="Courses">
+      <EntityTypeMapping TypeName="RegistrationDB.Model.Course">
+        <MappingFragment StoreEntitySet="Course">
+          <ScalarProperty Name="courseID" ColumnName="courseID" />
+          <ScalarProperty Name="courseName" ColumnName="courseName" />
+          <ScalarProperty Name="courseDept" ColumnName="courseDept" />
+          <ScalarProperty Name="courseCapacity" ColumnName="courseCapacity" />
+          <ScalarProperty Name="courseProfessor" ColumnName="courseProfessor" />
+          <ScalarProperty Name="startTime" ColumnName="startTime" />
+          <ScalarProperty Name="endTime" ColumnName="endTime" />
+          <ScalarProperty Name="currentEnrollment" ColumnName="currentEnrollment" />
+          <ScalarProperty Name="courseCredits" ColumnName="courseCredits" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Students">
+      <EntityTypeMapping TypeName="RegistrationDB.Model.Student">
+        <MappingFragment StoreEntitySet="Student">
+          <ScalarProperty Name="studentID" ColumnName="studentID" />
+          <ScalarProperty Name="firstName" ColumnName="firstName" />
+          <ScalarProperty Name="middleName" ColumnName="middleName" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="major" ColumnName="major" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StudentCourseLists">
+      <EntityTypeMapping TypeName="RegistrationDB.Model.StudentCourseList">
+        <MappingFragment StoreEntitySet="StudentCourseList">
+          <ScalarProperty Name="StudentCourseID" ColumnName="StudentCourseID" />
+          <ScalarProperty Name="studentID" ColumnName="studentID" />
+          <ScalarProperty Name="courseID" ColumnName="courseID" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="RegistrationDB.Model.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionName="RegistrationDB.Model.Store.fn_class_schedule" FunctionImportName="fn_class_schedule">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="RegistrationDB.Model.fn_class_schedule_Result">
+          <ScalarProperty Name="courseid" ColumnName="courseid" />
+          <ScalarProperty Name="coursename" ColumnName="coursename" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="RegistrationDB.Model.Store.fn_student_schedule" FunctionImportName="fn_student_schedule">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="RegistrationDB.Model.fn_student_schedule_Result">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="courseid" ColumnName="courseid" />
+          <ScalarProperty Name="coursename" ColumnName="coursename" />
+          <ScalarProperty Name="starttime" ColumnName="starttime" />
+          <ScalarProperty Name="endtime" ColumnName="endtime" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_add_course" FunctionName="RegistrationDB.Model.Store.sp_add_course" />
+    <FunctionImportMapping FunctionImportName="sp_add_student" FunctionName="RegistrationDB.Model.Store.sp_add_student" />
+    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="RegistrationDB.Model.Store.sp_alterdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="RegistrationDB.Model.Store.sp_creatediagram" />
+    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="RegistrationDB.Model.Store.sp_dropdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="RegistrationDB.Model.Store.sp_helpdiagramdefinition">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="RegistrationDB.Model.sp_helpdiagramdefinition_Result">
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="RegistrationDB.Model.Store.sp_helpdiagrams">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="RegistrationDB.Model.sp_helpdiagrams_Result">
+          <ScalarProperty Name="Database" ColumnName="Database" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="RegistrationDB.Model.Store.sp_renamediagram" />
+    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="RegistrationDB.Model.Store.sp_upgraddiagrams" />
+  </EntityContainerMapping>
+</Mapping>

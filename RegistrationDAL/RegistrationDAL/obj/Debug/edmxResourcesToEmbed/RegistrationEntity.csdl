@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RegistrationDB.Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <ComplexType Name="fn_class_schedule_Result">
+    <Property Name="courseid" Type="Int32" Nullable="false" />
+    <Property Name="coursename" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="767" FixedLength="false" Unicode="true" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="fn_student_schedule_Result">
+    <Property Name="name" Type="String" MaxLength="767" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="courseid" Type="Int32" Nullable="false" />
+    <Property Name="coursename" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="starttime" Type="Time" Nullable="false" />
+    <Property Name="endtime" Type="Time" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="courseID" />
+    </Key>
+    <Property Name="courseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="courseName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="courseDept" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="courseCapacity" Type="Int32" Nullable="false" />
+    <Property Name="courseProfessor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="startTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="endTime" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="currentEnrollment" Type="Int32" />
+    <Property Name="courseCredits" Type="Int32" Nullable="false" />
+    <Property Name="active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="StudentCourseLists" Relationship="Self.FK_StudentCourseList_Course" FromRole="Course" ToRole="StudentCourseList" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="studentID" />
+    </Key>
+    <Property Name="studentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="firstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="middleName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="lastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="major" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="StudentCourseLists" Relationship="Self.FK_StudentCourseList_Student" FromRole="Student" ToRole="StudentCourseList" />
+  </EntityType>
+  <EntityType Name="StudentCourseList">
+    <Key>
+      <PropertyRef Name="StudentCourseID" />
+    </Key>
+    <Property Name="StudentCourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="studentID" Type="Int32" Nullable="false" />
+    <Property Name="courseID" Type="Int32" Nullable="false" />
+    <Property Name="active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Course" Relationship="Self.FK_StudentCourseList_Course" FromRole="StudentCourseList" ToRole="Course" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_StudentCourseList_Student" FromRole="StudentCourseList" ToRole="Student" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_StudentCourseList_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1" />
+    <End Role="StudentCourseList" Type="Self.StudentCourseList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="courseID" />
+      </Principal>
+      <Dependent Role="StudentCourseList">
+        <PropertyRef Name="courseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentCourseList_Student">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="StudentCourseList" Type="Self.StudentCourseList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="studentID" />
+      </Principal>
+      <Dependent Role="StudentCourseList">
+        <PropertyRef Name="studentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="RegistrationDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Courses" EntityType="Self.Course" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <EntitySet Name="StudentCourseLists" EntityType="Self.StudentCourseList" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_StudentCourseList_Course" Association="Self.FK_StudentCourseList_Course">
+      <End Role="Course" EntitySet="Courses" />
+      <End Role="StudentCourseList" EntitySet="StudentCourseLists" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentCourseList_Student" Association="Self.FK_StudentCourseList_Student">
+      <End Role="Student" EntitySet="Students" />
+      <End Role="StudentCourseList" EntitySet="StudentCourseLists" />
+    </AssociationSet>
+    <FunctionImport Name="fn_class_schedule" IsComposable="true" ReturnType="Collection(RegistrationDB.Model.fn_class_schedule_Result)">
+      <Parameter Name="classnum" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="fn_student_schedule" IsComposable="true" ReturnType="Collection(RegistrationDB.Model.fn_student_schedule_Result)">
+      <Parameter Name="studentnum" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_add_course">
+      <Parameter Name="coursename" Mode="In" Type="String" />
+      <Parameter Name="coursedept" Mode="In" Type="String" />
+      <Parameter Name="coursecapacity" Mode="In" Type="Int32" />
+      <Parameter Name="courseprof" Mode="In" Type="String" />
+      <Parameter Name="start" Mode="In" Type="Time" />
+      <Parameter Name="end" Mode="In" Type="Time" />
+      <Parameter Name="coursecredits" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_add_student">
+      <Parameter Name="fname" Mode="In" Type="String" />
+      <Parameter Name="mname" Mode="In" Type="String" />
+      <Parameter Name="lname" Mode="In" Type="String" />
+      <Parameter Name="major" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(RegistrationDB.Model.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(RegistrationDB.Model.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>
